@@ -10,6 +10,5 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     override suspend fun fetchUserList(): List<User> {
         return githubService.fetchUserList()
-//        return emptyList()
     }
 }

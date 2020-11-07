@@ -38,4 +38,9 @@ ext {
     // coroutine
     coroutineVersion = '1.3.7'
 
+    // testing
+    mockitoVersion = '3.3.3'
+    mockitoKotlinVersion = '2.2.0'
+    robolectricVersion = '4.3.1'
+
 }
