@@ -34,7 +34,7 @@ class UserListActionFilterImpl @Inject constructor() : UserListActionFilter {
                 intent.isPullToRefresh, intent.query
             )
             is UserListIntent.SetSortSettingIntent -> UserListAction.SetSortSettingAction(
-                intent.sort
+                intent.sort, intent.query
             )
         }
     }

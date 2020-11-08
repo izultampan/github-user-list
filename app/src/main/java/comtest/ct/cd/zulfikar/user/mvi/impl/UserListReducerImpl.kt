@@ -8,10 +8,14 @@ import javax.inject.Inject
 class UserListReducerImpl @Inject constructor() : UserListReducer {
     override fun reduce(previous: UserListViewState, result: UserListResult): UserListViewState {
         return when (result) {
-            is UserListResult.SetSortSettingResult ->
-                previous.copy(
-                    sort = result.sort
-                )
+            is UserListResult.SetSortSettingResult -> when(result) {
+                is UserListResult.SetSortSettingResult.Loading ->
+                    previous.copy(isLoading = true)
+                is UserListResult.SetSortSettingResult.Error ->
+                    previous.copy(isLoading = false, error = result.error)
+                is UserListResult.SetSortSettingResult.Success ->
+                    previous.copy(isLoading = false, userList = result.list)
+            }
             is UserListResult.SetQueryResult ->
                 previous.copy(
                     query = result.query

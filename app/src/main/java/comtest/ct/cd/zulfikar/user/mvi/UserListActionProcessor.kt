@@ -27,10 +27,17 @@ class UserListActionProcessor(
                     UserListResult.LoadUserLisByNameResult.Error(action.isPullToRefresh, it)
                 }
             )
-            is UserListAction.SetSortSettingAction -> toResult {
-                setSortSetting.execute(action.sort)
-                UserListResult.SetSortSettingResult(action.sort)
-            }
+            is UserListAction.SetSortSettingAction -> toResult (
+                initialResult = UserListResult.SetSortSettingResult.Loading,
+                resultSuccessBlock = {
+                    setSortSetting.execute(action.sort)
+                    val result = fetchUserList.execute(action.query)
+                    UserListResult.SetSortSettingResult.Success(result)
+                },
+                resultErrorBlock = {
+                    UserListResult.SetSortSettingResult.Error(it)
+                }
+            )
         }
     }
 
