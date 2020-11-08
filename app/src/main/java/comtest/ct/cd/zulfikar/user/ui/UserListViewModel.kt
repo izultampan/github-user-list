@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quipper.common.mvi.MviViewModel
 import comtest.ct.cd.zulfikar.usecase.FetchUserList
-import comtest.ct.cd.zulfikar.usecase.SetQuery
+import comtest.ct.cd.zulfikar.usecase.SetPage
 import comtest.ct.cd.zulfikar.usecase.SetSortSetting
 import comtest.ct.cd.zulfikar.user.mvi.*
 import io.reactivex.Observable
@@ -14,7 +14,7 @@ import io.reactivex.subjects.PublishSubject
 class UserListViewModel @ViewModelInject constructor(
     fetchUserList: FetchUserList,
     setSortSetting: SetSortSetting,
-    setQuery: SetQuery,
+    setPage: SetPage,
     private val userListActionFilter: UserListActionFilter,
     private val userListReducer: UserListReducer,
     private val userListViewEffectSender: UserListViewEffectSender
@@ -26,7 +26,7 @@ class UserListViewModel @ViewModelInject constructor(
         viewModelScope = viewModelScope,
         fetchUserList = fetchUserList,
         setSortSetting = setSortSetting,
-        setQuery = setQuery
+        setPage = setPage
     )
     private val stateObservable: Observable<UserListViewState> = compose()
 

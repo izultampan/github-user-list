@@ -38,6 +38,22 @@ class UserListReducerImpl @Inject constructor() : UserListReducer {
                         userList = result.list
                     )
             }
+            is UserListResult.LoadMoreUserListResult -> when (result) {
+                is UserListResult.LoadMoreUserListResult.Success -> {
+                    val userList = previous.userList.toMutableList()
+                    userList.addAll(result.list)
+
+                    previous.copy(
+                        currentPage = result.currentPage,
+                        nextPage = result.nextPage,
+                        userList = userList
+                    )
+                }
+                is UserListResult.LoadMoreUserListResult.Error ->
+                    previous.copy(
+                        error = result.error
+                    )
+            }
         }
     }
 }

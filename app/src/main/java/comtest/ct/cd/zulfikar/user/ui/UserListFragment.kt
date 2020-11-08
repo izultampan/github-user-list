@@ -58,7 +58,6 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
         viewModel.processIntents(intents())
         setAdapter()
         setSwipeRefresh()
-        setLoadMore()
         setSortDialog()
         txtSearch.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
@@ -105,21 +104,22 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
             )
         }
     }
-
-    private fun setLoadMore() {
+    private fun setScrollListener(page: Int) {
+        //add scroll listener
+        userListRecyclerView.clearOnScrollListeners()
         val layoutManager = userListRecyclerView.layoutManager as LinearLayoutManager
-        val listener = object : EndlessRecyclerViewScrollListener(
+        val scrollListener = object : EndlessRecyclerViewScrollListener(
             visibleThreshold,
             layoutManager
         ) {
             override fun onLoadMore() {
-//                intentSubject.onNext(
-//                    UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString())
-//                )
+                intentSubject.onNext(
+                    UserListIntent.LoadMoreUserListIntent(page = page, txtSearch.query.toString())
+                )
                 userListRecyclerView.clearOnScrollListeners()
             }
         }
-        userListRecyclerView.addOnScrollListener(listener)
+        userListRecyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun setAdapter() {
@@ -204,9 +204,11 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
             layoutNotFound.visibility = View.GONE
             userListRecyclerView.visibility = View.VISIBLE
             adapter.submitList(state.userList)
+            setScrollListener(state.nextPage)
         } else {
             layoutNotFound.visibility = View.VISIBLE
             userListRecyclerView.visibility = View.GONE
+            userListRecyclerView.clearOnScrollListeners()
         }
     }
 }
