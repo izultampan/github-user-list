@@ -1,5 +1,6 @@
 package comtest.ct.cd.zulfikar.user.mvi.impl
 
+import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import comtest.ct.cd.zulfikar.user.mvi.UserListAction
 import comtest.ct.cd.zulfikar.user.mvi.UserListActionFilter
 import comtest.ct.cd.zulfikar.user.mvi.UserListIntent
@@ -8,6 +9,7 @@ import net.bytebuddy.utility.RandomString
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import kotlin.random.Random
 
 class UserListActionFilterImplTest {
 
@@ -22,14 +24,20 @@ class UserListActionFilterImplTest {
     fun `LoadUserListByNameIntent should pass the filter`() {
         val filter = userListActionFilter.filter()
         val dummyName = RandomString.make()
+        val dummyPage = Random.nextLong()
+        val dummyOrder = UserListOrderBy.NAME_ASC
+        val dummyIntent =             UserListIntent.LoadUserListByNameIntent(dummyName, dummyOrder, dummyPage)
+
         val observable = Observable.just(
-            UserListIntent.LoadUserListByNameIntent(dummyName)
+            dummyIntent
         )
         val result = observable.compose(filter).test()
         assertTrue(result.valueCount() == 1)
         result.assertValueAt(0) {
             it is UserListIntent.LoadUserListByNameIntent &&
-                    it.name == dummyName
+                    it.query == dummyName &&
+                    it.page == dummyPage &&
+                    it.sort == dummyOrder
         }
     }
 
@@ -37,11 +45,14 @@ class UserListActionFilterImplTest {
     @Test
     fun `actionFromIntent should convert from LoadUserListByNameIntent to LoadUserListByNameAction`() {
         val dummyName = RandomString.make()
-        val dummyIntent = UserListIntent.LoadUserListByNameIntent(dummyName)
+        val dummyPage = Random.nextLong()
+        val dummyOrder = UserListOrderBy.NAME_ASC
+        val dummyIntent =             UserListIntent.LoadUserListByNameIntent(dummyName, dummyOrder, dummyPage)
         val action = userListActionFilter.actionFromIntent(dummyIntent)
         assertTrue(
             action is UserListAction.LoadUserListByNameAction &&
-                    action.name == dummyIntent.name
+                    action.query == dummyIntent.query &&
+                    action.page == dummyIntent.page
         )
     }
 }

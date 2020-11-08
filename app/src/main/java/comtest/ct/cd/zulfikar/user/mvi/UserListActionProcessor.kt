@@ -18,13 +18,15 @@ class UserListActionProcessor(
             is UserListAction.LoadUserListByNameAction -> toResult(
                 initialResult = UserListResult.LoadUserLisByNameResult.Loading,
                 resultSuccessBlock = {
-                    fetchUserList.execute()
-                    val result = getUserList.execute(action.name)
+                    val result = fetchUserList.execute(
+                        action.query,
+                        action.sort,
+                        action.page
+                    )
                     UserListResult.LoadUserLisByNameResult.Success(result)
                 },
                 resultErrorBlock = {
-                    val result = getUserList.execute(action.name)
-                    UserListResult.LoadUserLisByNameResult.Error(result, it)
+                    UserListResult.LoadUserLisByNameResult.Error(it)
                 }
             )
         }

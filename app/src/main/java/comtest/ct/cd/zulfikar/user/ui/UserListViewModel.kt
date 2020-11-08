@@ -15,7 +15,8 @@ class UserListViewModel @ViewModelInject constructor(
     fetchUserList: FetchUserList,
     getUserList: GetUserList,
     private val userListActionFilter: UserListActionFilter,
-    private val userListReducer: UserListReducer
+    private val userListReducer: UserListReducer,
+    private val userListViewEffectSender: UserListViewEffectSender
 ) : ViewModel(), MviViewModel<UserListIntent, UserListViewState> {
 
     private val intentSubject = PublishSubject.create<UserListIntent>()
@@ -34,7 +35,8 @@ class UserListViewModel @ViewModelInject constructor(
             .flatMap { action ->
                 actionProcessor.processAction(action)
             }
-            .scan(UserListViewState.InitialState, userListReducer::reduce)
+            .doOnNext(userListViewEffectSender::handleViewEffect)
+            .scan(UserListViewState.initialState(), userListReducer::reduce)
             .distinctUntilChanged()
             .replay(1)
             .autoConnect(0)
@@ -46,5 +48,9 @@ class UserListViewModel @ViewModelInject constructor(
 
     override fun getStates(): Observable<UserListViewState> {
         return stateObservable.serialize()
+    }
+
+    fun getViewEffect(): Observable<UserListViewEffect> {
+        return userListViewEffectSender.getViewEffect()
     }
 }

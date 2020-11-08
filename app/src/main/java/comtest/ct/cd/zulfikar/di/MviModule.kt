@@ -2,8 +2,10 @@ package comtest.ct.cd.zulfikar.di
 
 import comtest.ct.cd.zulfikar.user.mvi.UserListActionFilter
 import comtest.ct.cd.zulfikar.user.mvi.UserListReducer
+import comtest.ct.cd.zulfikar.user.mvi.UserListViewEffectSender
 import comtest.ct.cd.zulfikar.user.mvi.impl.UserListActionFilterImpl
 import comtest.ct.cd.zulfikar.user.mvi.impl.UserListReducerImpl
+import comtest.ct.cd.zulfikar.user.mvi.impl.UserListViewEffectSenderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,7 @@ abstract class MviModule {
 
     @Binds
     abstract fun bindUserListReducer(userListReducerImpl: UserListReducerImpl): UserListReducer
+
+    @Binds
+    abstract fun bindUserListSender(userListViewEffectSenderImpl: UserListViewEffectSenderImpl): UserListViewEffectSender
 }
