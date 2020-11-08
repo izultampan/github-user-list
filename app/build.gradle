@@ -92,6 +92,12 @@ dependencies {
     // log
     implementation "com.jakewharton.timber:timber:$timberVersion"
 
+    // UI
+    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerView"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeRefreshLayout"
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayout"
+    implementation "com.google.android.material:material:$materialComponent"
+
     // Testing
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"

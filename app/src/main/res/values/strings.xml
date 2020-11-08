@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="type_name_here">Type name here</string>
+    <string name="result_not_found">Result Not Found</string>
+    <string name="action_sort">Sort</string>
+    <string name="sort_by_name_asc">Name ASC</string>
+    <string name="sort_by_name_desc">Name DESC</string>
+    <string name="title_sort">Sort By</string>
 </resources>

@@ -53,4 +53,10 @@ ext {
 
     // log
     timberVersion = '4.7.1'
+
+    // UI
+    androidxConstraintLayout = '2.0.2'
+    androidxRecyclerView = '1.1.0'
+    androidxSwipeRefreshLayout = '1.1.0'
+    materialComponent = '1.1.0'
 }
