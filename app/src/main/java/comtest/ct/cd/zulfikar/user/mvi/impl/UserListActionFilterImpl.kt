@@ -21,7 +21,8 @@ class UserListActionFilterImpl @Inject constructor() : UserListActionFilter {
                     .cast(UserListIntent::class.java)
                     .mergeWith(
                         shared.filter {
-                            it is UserListIntent.SetSortSettingIntent
+                            it is UserListIntent.SetSortSettingIntent ||
+                                    it is UserListIntent.LoadMoreUserListIntent
                         }
                     )
             }
@@ -35,6 +36,9 @@ class UserListActionFilterImpl @Inject constructor() : UserListActionFilter {
             )
             is UserListIntent.SetSortSettingIntent -> UserListAction.SetSortSettingAction(
                 intent.sort, intent.query
+            )
+            is UserListIntent.LoadMoreUserListIntent -> UserListAction.LoadMoreUserListAction(
+                intent.page, intent.query
             )
         }
     }

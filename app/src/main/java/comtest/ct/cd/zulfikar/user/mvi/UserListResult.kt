@@ -6,6 +6,12 @@ import comtest.ct.cd.zulfikar.user.UserListOrderBy
 
 sealed class UserListResult : MviResult {
     data class SetQueryResult(val query: String) : UserListResult()
+    sealed class LoadMoreUserListResult : UserListResult() {
+        data class Success(val currentPage: Int, val nextPage: Int, val list: List<Items>) :
+            LoadMoreUserListResult()
+
+        data class Error(val error: Exception) : LoadMoreUserListResult()
+    }
     sealed class SetSortSettingResult : UserListResult() {
         object Loading : SetSortSettingResult()
         data class Success(val list: List<Items>) :

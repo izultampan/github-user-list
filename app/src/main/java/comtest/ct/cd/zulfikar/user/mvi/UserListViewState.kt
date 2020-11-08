@@ -7,7 +7,8 @@ import comtest.ct.cd.zulfikar.user.UserListOrderBy
 data class UserListViewState(
     val isLoading: Boolean,
     val isPullToRefresh: Boolean,
-    val page: Long,
+    val currentPage: Int,
+    val nextPage: Int,
     val sort: UserListOrderBy,
     val userList: List<Items>,
     val query: String?,
@@ -18,7 +19,8 @@ data class UserListViewState(
             return UserListViewState(
                 isLoading = false,
                 isPullToRefresh = false,
-                page = 1,
+                currentPage = 1,
+                nextPage = 2,
                 sort = UserListOrderBy.NAME_ASC,
                 userList = emptyList(),
                 error = null,
