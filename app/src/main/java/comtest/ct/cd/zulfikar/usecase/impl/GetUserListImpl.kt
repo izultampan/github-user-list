@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetUserListImpl @Inject constructor(
     private val userRepository: UserRepository
 ) : GetUserList {
-    override suspend fun execute(): List<User> {
-        return userRepository.getUserList()
+    override suspend fun execute(name: String): List<User> {
+        return userRepository.getUserListByName(name)
     }
 }

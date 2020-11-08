@@ -46,4 +46,11 @@ ext {
     //Room Version
     roomVersion = '2.2.5'
 
+    //RxJava
+    rxjava2Version = '2.2.9'
+    rxjava2AndroidVersion = '2.1.0'
+    autodisposeVersion = "1.0.0"
+
+    // log
+    timberVersion = '4.7.1'
 }

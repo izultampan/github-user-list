@@ -19,7 +19,7 @@ class UserRepositoryImpl @Inject constructor(
             }
     }
 
-    override suspend fun getUserList(): List<User> {
+    override suspend fun getUserListByName(name: String): List<User> {
         return userDao.getUserList().map {
             User.fromDao(it)
         }
