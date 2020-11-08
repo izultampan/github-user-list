@@ -1,7 +1,6 @@
 package comtest.ct.cd.zulfikar.repository.impl
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import comtest.ct.cd.zulfikar.CoroutineTestRule
@@ -9,7 +8,6 @@ import comtest.ct.cd.zulfikar.constant.WebServiceConfigConstant
 import comtest.ct.cd.zulfikar.db.dao.UserDao
 import comtest.ct.cd.zulfikar.network.GithubService
 import comtest.ct.cd.zulfikar.repository.UserRepository
-import comtest.ct.cd.zulfikar.schema.User
 import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher

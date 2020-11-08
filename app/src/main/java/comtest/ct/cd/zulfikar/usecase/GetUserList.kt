@@ -1,8 +1,8 @@
 package comtest.ct.cd.zulfikar.usecase
 
-import comtest.ct.cd.zulfikar.schema.User
+import comtest.ct.cd.zulfikar.schema.Items
 
 interface GetUserList {
 
-    suspend fun execute(name: String): List<User>
+    suspend fun execute(name: String): List<Items>
 }

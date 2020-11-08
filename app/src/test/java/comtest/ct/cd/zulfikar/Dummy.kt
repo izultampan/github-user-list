@@ -1,8 +1,6 @@
 package comtest.ct.cd.zulfikar
 
-import comtest.ct.cd.zulfikar.schema.User
 import net.bytebuddy.utility.RandomString
-import java.util.*
 import kotlin.random.Random
 
 object Dummy {

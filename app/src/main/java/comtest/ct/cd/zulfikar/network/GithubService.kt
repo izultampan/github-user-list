@@ -10,7 +10,7 @@ interface GithubService {
     suspend fun fetchUserList(
         @Query("q") query: String,
         @Query("order") order: String,
-        @Query("page") page: Long,
-        @Query("per_page") perPage: Long
-    ): List<User>
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): User
 }
