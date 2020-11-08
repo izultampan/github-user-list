@@ -8,7 +8,7 @@ import io.reactivex.ObservableTransformer
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class UserListActionFilterImpl @Inject constructor(): UserListActionFilter {
+class UserListActionFilterImpl @Inject constructor() : UserListActionFilter {
     override fun filter(): ObservableTransformer<UserListIntent, UserListIntent> {
         return ObservableTransformer { intentObservable ->
             intentObservable.publish { shared ->
@@ -26,7 +26,7 @@ class UserListActionFilterImpl @Inject constructor(): UserListActionFilter {
     override fun actionFromIntent(intent: UserListIntent): UserListAction {
         return when (intent) {
             is UserListIntent.LoadUserListByNameIntent -> UserListAction.LoadUserListByNameAction(
-                intent.name
+                intent.query, intent.sort, intent.page
             )
         }
     }

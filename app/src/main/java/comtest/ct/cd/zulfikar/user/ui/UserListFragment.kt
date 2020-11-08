@@ -13,8 +13,10 @@ import com.quipper.common.mvi.MviView
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import comtest.ct.cd.zulfikar.R
+import comtest.ct.cd.zulfikar.constant.WebServiceConfigConstant
 import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import comtest.ct.cd.zulfikar.user.mvi.UserListIntent
+import comtest.ct.cd.zulfikar.user.mvi.UserListViewEffect
 import comtest.ct.cd.zulfikar.user.mvi.UserListViewState
 import comtest.ct.cd.zulfikar.widget.EndlessRecyclerViewScrollListener
 import comtest.ct.cd.zulfikar.widget.sortdialog.SortDialog
@@ -54,25 +56,8 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.processIntents(intents())
-
-        txtSearch.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let {
-                        intentSubject.onNext(
-                            UserListIntent.LoadUserListByNameIntent(it)
-                        )
-                    }
-                    return false
-                }
-
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-            }
-        )
         setAdapter()
-        setSwipeRefresh()
+//        setSwipeRefresh()
         setLoadMore()
         setSortDialog()
     }
@@ -96,12 +81,12 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
         return list
     }
 
-    private fun setSwipeRefresh() {
-        swipeRefreshLayout.setOnRefreshListener {
-            intentSubject.onNext(
-                UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString())
-            )
-        }
+    private fun setSwipeRefresh(state: UserListViewState) {
+//        swipeRefreshLayout.setOnRefreshListener {
+//            intentSubject.onNext(
+//                UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString(), )
+//            )
+//        }
     }
 
     private fun setLoadMore() {
@@ -111,9 +96,9 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
             layoutManager
         ) {
             override fun onLoadMore() {
-                intentSubject.onNext(
-                    UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString())
-                )
+//                intentSubject.onNext(
+//                    UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString())
+//                )
                 userListRecyclerView.clearOnScrollListeners()
             }
         }
@@ -145,6 +130,16 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
                 Timber.e(it)
             })
 
+        viewModel.getViewEffect()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .autoDisposable(scopeProvider)
+            .subscribe({
+                handleViewEffect(it)
+            }, {
+                Timber.e(it)
+            })
+
         sortDialog.getListener()
             .autoDisposable(scopeProvider)
             .subscribe({
@@ -164,16 +159,43 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     }
 
     override fun render(state: UserListViewState) {
-        when (state) {
-            is UserListViewState.ShowLoading -> {
-                Timber.d("loading")
-            }
-            is UserListViewState.ShowUserList -> {
-                adapter.submitList(state.userList)
-            }
-            is UserListViewState.ShowError -> {
-                Timber.e(state.error)
-            }
+        handleLoading(state)
+        handleContent(state)
+    }
+
+    private fun handleViewEffect(userListViewEffect: UserListViewEffect) {
+
+    }
+
+    private fun handleLoading(state: UserListViewState) {
+        if (state.isLoading) {
+
+        } else {
+
         }
+    }
+
+    private fun handleContent(state: UserListViewState) {
+//        txtSearch.setOnQueryTextListener(
+//            object : SearchView.OnQueryTextListener {
+//                override fun onQueryTextChange(newText: String?): Boolean {
+//                    newText?.let {
+//                        intentSubject.onNext(
+//                            UserListIntent.LoadUserListByNameIntent(it, state.sort, state.page)
+//                        )
+//                    }
+//                    return false
+//                }
+//
+//                override fun onQueryTextSubmit(query: String?): Boolean {
+//                    return false
+//                }
+//            }
+//        )
+//        if (state.userList.isEmpty()) {
+//
+//        } else {
+//            adapter.submitList(state.userList)
+//        }
     }
 }
