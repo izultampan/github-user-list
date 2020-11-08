@@ -12,8 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".user.MainActivity"></activity>
-        <activity android:name=".user.UserListActivity">
+        <activity android:name=".user.UserListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.WhiteStatusBar"
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

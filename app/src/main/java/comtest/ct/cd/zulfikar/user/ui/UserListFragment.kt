@@ -100,9 +100,9 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
 
     private fun setSwipeRefresh() {
         swipeRefreshLayout.setOnRefreshListener {
-//            intentSubject.onNext(
-//                UserListIntent.InitLoadUserList(RESET_PAGE)
-//            )
+            intentSubject.onNext(
+                UserListIntent.LoadUserListByNameIntent(true, txtSearch.query.toString())
+            )
         }
     }
 

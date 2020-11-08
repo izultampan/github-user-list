@@ -59,4 +59,7 @@ ext {
     androidxRecyclerView = '1.1.0'
     androidxSwipeRefreshLayout = '1.1.0'
     materialComponent = '1.1.0'
+
+    // glide
+    glideVersion = '4.11.0'
 }

@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/txtTitle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textColor="@color/colorPrimary"
-    android:textSize="@dimen/title_text_size"
-    android:textStyle="bold"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    tools:text="@tools:sample/full_names"/>
+    android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/image_thumbnail_size"
+        android:layout_height="@dimen/image_thumbnail_size"
+        android:layout_margin="@dimen/space_16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_16dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/title_text_size"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="@id/avatar"
+        tools:text="@tools:sample/full_names" />
+</androidx.constraintlayout.widget.ConstraintLayout>

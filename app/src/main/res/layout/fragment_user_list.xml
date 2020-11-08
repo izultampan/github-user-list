@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/user_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/space_16dp">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/txtSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_16dp"
+        android:layout_marginStart="@dimen/space_16dp"
+        android:layout_marginEnd="@dimen/space_16dp"
         android:hint="@string/type_name_here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnSort"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_vertical"/>
 
-    <com.google.android.material.button.MaterialButton
+    <ImageView
         android:id="@+id/btnSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/space_16dp"
-        android:text="@string/action_sort"
+        android:src="@android:drawable/ic_menu_sort_alphabetically"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/txtSearch"/>
