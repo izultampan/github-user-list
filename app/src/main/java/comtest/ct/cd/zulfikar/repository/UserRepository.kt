@@ -6,5 +6,5 @@ interface UserRepository {
 
     suspend fun fetchUserList()
 
-    suspend fun getUserList(): List<User>
+    suspend fun getUserListByName(name: String): List<User>
 }

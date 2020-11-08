@@ -4,15 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/user_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.UserListFragment">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/txtSearch"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="UserListFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/space_16dp"
+        android:hint="@string/type_name_here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

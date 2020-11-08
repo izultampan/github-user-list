@@ -18,6 +18,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "GITHUB_TOKEN", "\"3f6db93893663dab2f3239fadb10d93539bd27aa\""
     }
 
     buildTypes {
@@ -76,6 +78,19 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     androidTestImplementation "androidx.room:room-testing:$roomVersion"
+
+    // RxJava
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava2Version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxjava2AndroidVersion"
+
+    //Auto Disposer
+    implementation "com.uber.autodispose:autodispose-ktx:$autodisposeVersion"
+    implementation "com.uber.autodispose:autodispose-android-ktx:$autodisposeVersion"
+    implementation "com.uber.autodispose:autodispose-android-archcomponents-ktx:$autodisposeVersion"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+
+    // log
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
     // Testing
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"

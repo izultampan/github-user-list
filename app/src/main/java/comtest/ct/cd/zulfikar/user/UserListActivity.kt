@@ -3,7 +3,7 @@ package comtest.ct.cd.zulfikar.user
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import comtest.ct.cd.zulfikar.R
-import comtest.ct.cd.zulfikar.user.ui.main.UserListFragment
+import comtest.ct.cd.zulfikar.user.ui.UserListFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
