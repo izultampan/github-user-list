@@ -1,6 +1,5 @@
 package comtest.ct.cd.zulfikar.repository.impl
 
-import comtest.ct.cd.zulfikar.constant.WebServiceConfigConstant
 import comtest.ct.cd.zulfikar.network.GithubService
 import comtest.ct.cd.zulfikar.repository.UserRepository
 import comtest.ct.cd.zulfikar.schema.Items
@@ -23,17 +22,28 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchUserList(query: String): List<Items> {
-        return if (query.isNotBlank()) {
+        val value = if (query.isNotBlank()) {
             githubService.fetchUserList(
                 query.toLowerCase(),
                 sort.key,
-                page,
-                WebServiceConfigConstant.PER_PAGE
+                page
             ).items.filter {
                 it.login.startsWith(query)
             }
         } else {
             emptyList()
+        }
+        return when (sort) {
+            UserListOrderBy.NAME_ASC -> {
+                value.sortedBy {
+                    it.login
+                }
+            }
+            UserListOrderBy.NAME_DESC -> {
+                value.sortedByDescending {
+                    it.login
+                }
+            }
         }
     }
 }

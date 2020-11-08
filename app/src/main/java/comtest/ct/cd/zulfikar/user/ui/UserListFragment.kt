@@ -168,7 +168,12 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     }
 
     private fun handleSort(userListOrderBy: UserListOrderBy) {
-        intentSubject.onNext(UserListIntent.SetSortSettingIntent(userListOrderBy))
+        intentSubject.onNext(
+            UserListIntent.SetSortSettingIntent(
+                userListOrderBy,
+                txtSearch.query.toString()
+            )
+        )
     }
 
     override fun intents(): Observable<UserListIntent> {
