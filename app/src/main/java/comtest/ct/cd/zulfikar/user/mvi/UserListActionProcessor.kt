@@ -1,7 +1,8 @@
 package comtest.ct.cd.zulfikar.user.mvi
 
 import comtest.ct.cd.zulfikar.usecase.FetchUserList
-import comtest.ct.cd.zulfikar.usecase.GetUserList
+import comtest.ct.cd.zulfikar.usecase.SetQuery
+import comtest.ct.cd.zulfikar.usecase.SetSortSetting
 import io.reactivex.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,24 +12,25 @@ import kotlinx.coroutines.withContext
 class UserListActionProcessor(
     private val viewModelScope: CoroutineScope,
     private val fetchUserList: FetchUserList,
-    private val getUserList: GetUserList
+    private val setSortSetting: SetSortSetting,
+    private val setQuery: SetQuery
 ) {
     fun processAction(action: UserListAction): Observable<UserListResult> {
         return when (action) {
             is UserListAction.LoadUserListByNameAction -> toResult(
                 initialResult = UserListResult.LoadUserLisByNameResult.Loading,
                 resultSuccessBlock = {
-                    val result = fetchUserList.execute(
-                        action.query,
-                        action.sort,
-                        action.page
-                    )
-                    UserListResult.LoadUserLisByNameResult.Success(result)
+                    val result = fetchUserList.execute(action.query)
+                    UserListResult.LoadUserLisByNameResult.Success(action.isPullToRefresh, result)
                 },
                 resultErrorBlock = {
-                    UserListResult.LoadUserLisByNameResult.Error(it)
+                    UserListResult.LoadUserLisByNameResult.Error(action.isPullToRefresh, it)
                 }
             )
+            is UserListAction.SetSortSettingAction -> toResult {
+                setSortSetting.execute(action.sort)
+                UserListResult.SetSortSettingResult(action.sort)
+            }
         }
     }
 
@@ -53,4 +55,16 @@ class UserListActionProcessor(
         }
     }
 
+
+    fun toResult(resultSuccessBlock: suspend () -> UserListResult): Observable<UserListResult> {
+        return Observable.create { emitter ->
+            viewModelScope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    resultSuccessBlock()
+                }
+                emitter.onNext(result)
+                emitter.onComplete()
+            }
+        }
+    }
 }

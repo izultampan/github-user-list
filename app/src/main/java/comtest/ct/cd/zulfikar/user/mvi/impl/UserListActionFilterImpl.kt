@@ -19,6 +19,11 @@ class UserListActionFilterImpl @Inject constructor() : UserListActionFilter {
                     )
                 )
                     .cast(UserListIntent::class.java)
+                    .mergeWith(
+                        shared.filter {
+                            it is UserListIntent.SetSortSettingIntent
+                        }
+                    )
             }
         }
     }
@@ -26,7 +31,10 @@ class UserListActionFilterImpl @Inject constructor() : UserListActionFilter {
     override fun actionFromIntent(intent: UserListIntent): UserListAction {
         return when (intent) {
             is UserListIntent.LoadUserListByNameIntent -> UserListAction.LoadUserListByNameAction(
-                intent.query, intent.sort, intent.page
+                intent.isPullToRefresh, intent.query
+            )
+            is UserListIntent.SetSortSettingIntent -> UserListAction.SetSortSettingAction(
+                intent.sort
             )
         }
     }

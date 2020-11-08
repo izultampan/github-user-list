@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import comtest.ct.cd.zulfikar.CoroutineTestRule
 import comtest.ct.cd.zulfikar.repository.UserRepository
-import comtest.ct.cd.zulfikar.schema.User
 import comtest.ct.cd.zulfikar.usecase.FetchUserList
 import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import kotlinx.coroutines.test.TestCoroutineDispatcher

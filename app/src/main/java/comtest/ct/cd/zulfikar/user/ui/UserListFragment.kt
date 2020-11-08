@@ -13,7 +13,6 @@ import com.quipper.common.mvi.MviView
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import comtest.ct.cd.zulfikar.R
-import comtest.ct.cd.zulfikar.constant.WebServiceConfigConstant
 import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import comtest.ct.cd.zulfikar.user.mvi.UserListIntent
 import comtest.ct.cd.zulfikar.user.mvi.UserListViewEffect
@@ -33,6 +32,7 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
 
     companion object {
         private const val visibleThreshold = 3
+        private const val RESET_PAGE = 1
         fun newInstance() = UserListFragment()
     }
 
@@ -57,9 +57,26 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
         super.onViewCreated(view, savedInstanceState)
         viewModel.processIntents(intents())
         setAdapter()
-//        setSwipeRefresh()
+        setSwipeRefresh()
         setLoadMore()
         setSortDialog()
+        txtSearch.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        intentSubject.onNext(
+                            UserListIntent.LoadUserListByNameIntent(false, it)
+                        )
+                    }
+                    return false
+                }
+
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+            }
+        )
+
     }
 
     private fun setSortDialog() {
@@ -81,12 +98,12 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
         return list
     }
 
-    private fun setSwipeRefresh(state: UserListViewState) {
-//        swipeRefreshLayout.setOnRefreshListener {
+    private fun setSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
 //            intentSubject.onNext(
-//                UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString(), )
+//                UserListIntent.InitLoadUserList(RESET_PAGE)
 //            )
-//        }
+        }
     }
 
     private fun setLoadMore() {
@@ -151,7 +168,7 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     }
 
     private fun handleSort(userListOrderBy: UserListOrderBy) {
-
+        intentSubject.onNext(UserListIntent.SetSortSettingIntent(userListOrderBy))
     }
 
     override fun intents(): Observable<UserListIntent> {
@@ -169,33 +186,22 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
 
     private fun handleLoading(state: UserListViewState) {
         if (state.isLoading) {
-
+            if (state.isPullToRefresh) {
+                swipeRefreshLayout.isRefreshing = true
+            }
         } else {
-
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
     private fun handleContent(state: UserListViewState) {
-//        txtSearch.setOnQueryTextListener(
-//            object : SearchView.OnQueryTextListener {
-//                override fun onQueryTextChange(newText: String?): Boolean {
-//                    newText?.let {
-//                        intentSubject.onNext(
-//                            UserListIntent.LoadUserListByNameIntent(it, state.sort, state.page)
-//                        )
-//                    }
-//                    return false
-//                }
-//
-//                override fun onQueryTextSubmit(query: String?): Boolean {
-//                    return false
-//                }
-//            }
-//        )
-//        if (state.userList.isEmpty()) {
-//
-//        } else {
-//            adapter.submitList(state.userList)
-//        }
+        if (state.userList.isNotEmpty()) {
+            layoutNotFound.visibility = View.GONE
+            userListRecyclerView.visibility = View.VISIBLE
+            adapter.submitList(state.userList)
+        } else {
+            layoutNotFound.visibility = View.VISIBLE
+            userListRecyclerView.visibility = View.GONE
+        }
     }
 }

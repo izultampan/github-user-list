@@ -5,15 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quipper.common.mvi.MviViewModel
 import comtest.ct.cd.zulfikar.usecase.FetchUserList
-import comtest.ct.cd.zulfikar.usecase.GetUserList
+import comtest.ct.cd.zulfikar.usecase.SetQuery
+import comtest.ct.cd.zulfikar.usecase.SetSortSetting
 import comtest.ct.cd.zulfikar.user.mvi.*
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.CoroutineDispatcher
 
 class UserListViewModel @ViewModelInject constructor(
     fetchUserList: FetchUserList,
-    getUserList: GetUserList,
+    setSortSetting: SetSortSetting,
+    setQuery: SetQuery,
     private val userListActionFilter: UserListActionFilter,
     private val userListReducer: UserListReducer,
     private val userListViewEffectSender: UserListViewEffectSender
@@ -24,7 +25,8 @@ class UserListViewModel @ViewModelInject constructor(
     private val actionProcessor = UserListActionProcessor(
         viewModelScope = viewModelScope,
         fetchUserList = fetchUserList,
-        getUserList = getUserList
+        setSortSetting = setSortSetting,
+        setQuery = setQuery
     )
     private val stateObservable: Observable<UserListViewState> = compose()
 

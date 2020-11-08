@@ -2,8 +2,12 @@ package comtest.ct.cd.zulfikar.di
 
 import comtest.ct.cd.zulfikar.usecase.FetchUserList
 import comtest.ct.cd.zulfikar.usecase.GetUserList
+import comtest.ct.cd.zulfikar.usecase.SetQuery
+import comtest.ct.cd.zulfikar.usecase.SetSortSetting
 import comtest.ct.cd.zulfikar.usecase.impl.FetchUserListImpl
 import comtest.ct.cd.zulfikar.usecase.impl.GetUserListImpl
+import comtest.ct.cd.zulfikar.usecase.impl.SetQueryImpl
+import comtest.ct.cd.zulfikar.usecase.impl.SetSortSettingImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +22,10 @@ abstract class UsecaseModule {
 
     @Binds
     abstract fun bindsGetUserList(getUserListImpl: GetUserListImpl): GetUserList
+
+    @Binds
+    abstract fun bindsSetSortSetting(setSortSetting: SetSortSettingImpl): SetSortSetting
+
+    @Binds
+    abstract fun bindsSetQuery(setQueryImpl: SetQueryImpl): SetQuery
 }
