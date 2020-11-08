@@ -10,6 +10,10 @@ class UserRepositoryImpl @Inject constructor(
     private val githubService: GithubService,
     private val userDao: UserDao
 ) : UserRepository {
+    companion object {
+        const val NAME_ASC = "name_asc"
+        const val NAME_DESC = "name_desc"
+    }
     override suspend fun fetchUserList() {
         githubService.fetchUserList()
             .map {

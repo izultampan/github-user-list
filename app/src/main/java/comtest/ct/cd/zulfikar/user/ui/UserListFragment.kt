@@ -7,12 +7,17 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.quipper.common.mvi.MviView
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import comtest.ct.cd.zulfikar.R
+import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import comtest.ct.cd.zulfikar.user.mvi.UserListIntent
 import comtest.ct.cd.zulfikar.user.mvi.UserListViewState
+import comtest.ct.cd.zulfikar.widget.EndlessRecyclerViewScrollListener
+import comtest.ct.cd.zulfikar.widget.sortdialog.SortDialog
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,6 +30,7 @@ import timber.log.Timber
 class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> {
 
     companion object {
+        private const val visibleThreshold = 3
         fun newInstance() = UserListFragment()
     }
 
@@ -33,6 +39,10 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     private val scopeProvider by lazy { AndroidLifecycleScopeProvider.from(this) }
 
     private val intentSubject = PublishSubject.create<UserListIntent>()
+
+    private lateinit var adapter: UserListAdapter
+
+    private lateinit var sortDialog: SortDialog<UserListOrderBy>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,7 +58,7 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
         txtSearch.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let{
+                    newText?.let {
                         intentSubject.onNext(
                             UserListIntent.LoadUserListByNameIntent(it)
                         )
@@ -61,6 +71,66 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
                 }
             }
         )
+        setAdapter()
+        setSwipeRefresh()
+        setLoadMore()
+        setSortDialog()
+    }
+
+    private fun setSortDialog() {
+        sortDialog = SortDialog.createInstance(true, getString(R.string.title_sort))
+        sortDialog.submitList(
+            generateSortBy()
+        )
+        btnSort.setOnClickListener {
+            sortDialog.show(
+                requireActivity().supportFragmentManager,
+                UserListFragment::class.java.simpleName
+            )
+        }
+    }
+
+    private fun generateSortBy(): List<UserListOrderBy> {
+        val list = arrayListOf<UserListOrderBy>()
+        list.addAll(UserListOrderBy.values())
+        return list
+    }
+
+    private fun setSwipeRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
+            intentSubject.onNext(
+                UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString())
+            )
+        }
+    }
+
+    private fun setLoadMore() {
+        val layoutManager = userListRecyclerView.layoutManager as LinearLayoutManager
+        val listener = object : EndlessRecyclerViewScrollListener(
+            visibleThreshold,
+            layoutManager
+        ) {
+            override fun onLoadMore() {
+                intentSubject.onNext(
+                    UserListIntent.LoadUserListByNameIntent(txtSearch.query.toString())
+                )
+                userListRecyclerView.clearOnScrollListeners()
+            }
+        }
+        userListRecyclerView.addOnScrollListener(listener)
+    }
+
+    private fun setAdapter() {
+        adapter = UserListAdapter()
+        userListRecyclerView.layoutManager = LinearLayoutManager(
+            requireContext()
+        )
+        val dividerItemDecoration = DividerItemDecoration(
+            userListRecyclerView.context,
+            (userListRecyclerView.layoutManager as LinearLayoutManager).orientation
+        )
+        userListRecyclerView.addItemDecoration(dividerItemDecoration)
+        userListRecyclerView.adapter = adapter
     }
 
     override fun onResume() {
@@ -74,6 +144,19 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
             }, {
                 Timber.e(it)
             })
+
+        sortDialog.getListener()
+            .autoDisposable(scopeProvider)
+            .subscribe({
+                handleSort(it)
+                sortDialog.dismiss()
+            }, { exception ->
+                Timber.e(exception)
+            })
+    }
+
+    private fun handleSort(userListOrderBy: UserListOrderBy) {
+
     }
 
     override fun intents(): Observable<UserListIntent> {
@@ -86,9 +169,7 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
                 Timber.d("loading")
             }
             is UserListViewState.ShowUserList -> {
-                state.userList.forEach {
-                    Timber.d("izul : ${it.login}")
-                }
+                adapter.submitList(state.userList)
             }
             is UserListViewState.ShowError -> {
                 Timber.e(state.error)
