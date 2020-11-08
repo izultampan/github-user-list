@@ -43,4 +43,7 @@ ext {
     mockitoKotlinVersion = '2.2.0'
     robolectricVersion = '4.3.1'
 
+    //Room Version
+    roomVersion = '2.2.5'
+
 }

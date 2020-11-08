@@ -4,5 +4,7 @@ import comtest.ct.cd.zulfikar.schema.User
 
 interface UserRepository {
 
-    suspend fun fetchUserList(): List<User>
+    suspend fun fetchUserList()
+
+    suspend fun getUserList(): List<User>
 }

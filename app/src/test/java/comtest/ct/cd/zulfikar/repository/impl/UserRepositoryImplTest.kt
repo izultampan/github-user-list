@@ -1,9 +1,13 @@
 package comtest.ct.cd.zulfikar.repository.impl
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import comtest.ct.cd.zulfikar.CoroutineTestRule
-import comtest.ct.cd.zulfikar.data.network.GithubService
+import comtest.ct.cd.zulfikar.Dummy
+import comtest.ct.cd.zulfikar.db.dao.UserDao
+import comtest.ct.cd.zulfikar.db.entity.UserEntity
+import comtest.ct.cd.zulfikar.network.GithubService
 import comtest.ct.cd.zulfikar.repository.UserRepository
 import comtest.ct.cd.zulfikar.schema.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,34 +33,44 @@ class UserRepositoryImplTest {
     @Mock
     private lateinit var mockedGithubService: GithubService
 
+    @Mock
+    private lateinit var mockedUserDao: UserDao
+
     private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         userRepository = UserRepositoryImpl(
-            githubService = mockedGithubService
+            githubService = mockedGithubService,
+            userDao = mockedUserDao
         )
     }
 
     @Test
-    fun `fetchUserList should return list of users when get success response from webservice`() {
+    fun `fetchUserList should execute fetch user from retrofit service and put result into database`() {
         coroutineTestRule.testDispatcher.runBlockingTest {
             val dummyUser: User = mock()
             val expectedList = listOf(dummyUser)
             whenever(mockedGithubService.fetchUserList()).thenReturn(expectedList)
-            val userList = userRepository.fetchUserList()
-            assertEquals(expectedList, userList)
+            userRepository.fetchUserList()
+            verify(mockedGithubService).fetchUserList()
+            verify(mockedUserDao).insertOrReplaceList(expectedList.map {
+                it.toDao()
+            })
         }
     }
 
     @Test
-    fun `fetchUserList should return empty result when get success response from webservice but empty result`() {
+    fun `fetchUserList should execute fetch user from retrofit service but no result that put into database`() {
         coroutineTestRule.testDispatcher.runBlockingTest {
             val expectedList = emptyList<User>()
             whenever(mockedGithubService.fetchUserList()).thenReturn(expectedList)
-            val userList = userRepository.fetchUserList()
-            assertEquals(expectedList, userList)
+            userRepository.fetchUserList()
+            verify(mockedGithubService).fetchUserList()
+            verify(mockedUserDao).insertOrReplaceList(expectedList.map {
+                it.toDao()
+            })
         }
     }
 
@@ -67,6 +81,47 @@ class UserRepositoryImplTest {
                 val expectedException = MockitoException(RandomString.make(2))
                 whenever(mockedGithubService.fetchUserList()).thenThrow(expectedException)
                 userRepository.fetchUserList()
+            },
+            verifyFunction = {
+                it is MockitoException
+            }
+        )
+    }
+
+    @Test
+    fun `getUserList should return list of user if there is value on user table`() {
+        coroutineTestRule.testDispatcher.runBlockingTest {
+            val dummyUser: User = Dummy.createUser()
+            val expectedList = listOf(dummyUser).map {
+                it.toDao()
+            }
+            whenever(mockedUserDao.getUserList()).thenReturn(expectedList)
+            val result = userRepository.getUserList().map {
+                it.toDao()
+            }
+            verify(mockedUserDao).getUserList()
+            assertEquals(expectedList, result)
+        }
+    }
+
+    @Test
+    fun `getUserList should return empty list of user if there is no value on user table`() {
+        coroutineTestRule.testDispatcher.runBlockingTest {
+            val dummyUser: User = mock()
+            val expectedList = emptyList<UserEntity>()
+            whenever(mockedUserDao.getUserList()).thenReturn(expectedList)
+            val result = userRepository.getUserList()
+            verify(mockedUserDao).getUserList()
+            assertEquals(expectedList, result)
+        }
+    }
+
+    @Test
+    fun `getUserList should return exception if get some error when query from database`() {
+        coroutineTestRule.runBlockingErrorTest(
+            testFunction = {
+                whenever(mockedUserDao.getUserList()).thenThrow(MockitoException(RandomString.make(2)))
+                userRepository.getUserList()
             },
             verifyFunction = {
                 it is MockitoException

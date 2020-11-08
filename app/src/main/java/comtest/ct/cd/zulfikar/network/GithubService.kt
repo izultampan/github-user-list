@@ -1,4 +1,4 @@
-package comtest.ct.cd.zulfikar.data.network
+package comtest.ct.cd.zulfikar.network
 
 import comtest.ct.cd.zulfikar.schema.User
 import retrofit2.http.GET

@@ -11,6 +11,7 @@ class UserListViewModel @ViewModelInject  constructor(
 ): ViewModel() {
 
     suspend fun fetchUserList(): List<User> {
-        return userRepository.fetchUserList()
+        userRepository.fetchUserList()
+        return userRepository.getUserList()
     }
 }

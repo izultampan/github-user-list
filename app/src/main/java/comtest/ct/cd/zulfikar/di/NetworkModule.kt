@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import comtest.ct.cd.zulfikar.data.network.GithubService
+import comtest.ct.cd.zulfikar.network.GithubService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
