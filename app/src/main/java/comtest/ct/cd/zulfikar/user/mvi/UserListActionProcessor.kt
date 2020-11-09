@@ -24,7 +24,11 @@ class UserListActionProcessor(
                         setPage.execute(1)
                     }
                     val result = fetchUserList.execute(action.query)
-                    UserListResult.LoadUserLisByNameResult.Success(action.isPullToRefresh, result)
+                    if (result.isEmpty()) {
+                        UserListResult.LoadUserLisByNameResult.Empty
+                    } else {
+                        UserListResult.LoadUserLisByNameResult.Success(action.isPullToRefresh, result)
+                    }
                 },
                 resultErrorBlock = {
                     UserListResult.LoadUserLisByNameResult.Error(action.isPullToRefresh, it)
@@ -35,7 +39,11 @@ class UserListActionProcessor(
                 resultSuccessBlock = {
                     setSortSetting.execute(action.sort)
                     val result = fetchUserList.execute(action.query)
-                    UserListResult.SetSortSettingResult.Success(result)
+                    if (result.isEmpty()) {
+                        UserListResult.SetSortSettingResult.Empty
+                    } else {
+                        UserListResult.SetSortSettingResult.Success(result)
+                    }
                 },
                 resultErrorBlock = {
                     UserListResult.SetSortSettingResult.Error(it)
@@ -45,7 +53,11 @@ class UserListActionProcessor(
                 resultSuccessBlock = {
                     setPage.execute(action.page)
                     val result = fetchUserList.execute(action.query)
-                    UserListResult.LoadMoreUserListResult.Success(action.page, action.page + 1, result)
+                    if (result.isEmpty()) {
+                        UserListResult.LoadMoreUserListResult.Empty
+                    } else {
+                        UserListResult.LoadMoreUserListResult.Success(action.page, action.page + 1, result)
+                    }
                 },
                 resultErrorBlock = {
                     UserListResult.LoadMoreUserListResult.Error(it)

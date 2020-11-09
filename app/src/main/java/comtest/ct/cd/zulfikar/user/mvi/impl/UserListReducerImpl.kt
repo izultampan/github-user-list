@@ -8,13 +8,18 @@ import javax.inject.Inject
 class UserListReducerImpl @Inject constructor() : UserListReducer {
     override fun reduce(previous: UserListViewState, result: UserListResult): UserListViewState {
         return when (result) {
-            is UserListResult.SetSortSettingResult -> when(result) {
+            is UserListResult.SetSortSettingResult -> when (result) {
                 is UserListResult.SetSortSettingResult.Loading ->
                     previous.copy(isLoading = true)
                 is UserListResult.SetSortSettingResult.Error ->
                     previous.copy(isLoading = false, error = result.error)
                 is UserListResult.SetSortSettingResult.Success ->
                     previous.copy(isLoading = false, userList = result.list)
+                is UserListResult.SetSortSettingResult.Empty ->
+                    previous.copy(
+                        isLoading = false,
+                        error = null
+                    )
             }
             is UserListResult.SetQueryResult ->
                 previous.copy(
@@ -37,6 +42,8 @@ class UserListReducerImpl @Inject constructor() : UserListReducer {
                         error = null,
                         userList = result.list
                     )
+                is UserListResult.LoadUserLisByNameResult.Empty ->
+                    previous.copy(isLoading = false, error = null)
             }
             is UserListResult.LoadMoreUserListResult -> when (result) {
                 is UserListResult.LoadMoreUserListResult.Success -> {
@@ -49,6 +56,8 @@ class UserListReducerImpl @Inject constructor() : UserListReducer {
                         userList = userList
                     )
                 }
+                is UserListResult.LoadMoreUserListResult.Empty ->
+                    previous
                 is UserListResult.LoadMoreUserListResult.Error ->
                     previous.copy(
                         error = result.error

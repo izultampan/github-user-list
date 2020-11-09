@@ -6,4 +6,8 @@
     <string name="sort_by_name_asc">Name ASC</string>
     <string name="sort_by_name_desc">Name DESC</string>
     <string name="title_sort">Sort By</string>
+    <string name="action_retry">Retry</string>
+    <string name="error_something_wrong">Something wrong</string>
+    <string name="github_user">Github User</string>
+    <string name="ctcd">CTCD</string>
 </resources>
