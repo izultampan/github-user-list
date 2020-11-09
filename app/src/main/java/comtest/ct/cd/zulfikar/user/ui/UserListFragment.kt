@@ -211,8 +211,9 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
             is UserListViewEffect.ShowResultEmptyViewEffect -> {
                 createSnackBarNoAction(
                     rootCoordinator,
-                    getString(R.string.result_not_found),
-                    R.id.snackbarHolder
+                    R.string.result_not_found,
+                    R.id.snackbarHolder,
+                    Snackbar.LENGTH_SHORT
                 ).show()
             }
         }
