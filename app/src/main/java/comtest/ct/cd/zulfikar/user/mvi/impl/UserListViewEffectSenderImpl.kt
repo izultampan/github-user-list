@@ -18,23 +18,18 @@ class UserListViewEffectSenderImpl @Inject constructor() : UserListViewEffectSen
             }
             is UserListResult.SetSortSettingResult.Error -> {
                 sender.onNext(UserListViewEffect.ShowResultErrorViewEffect)
-
             }
             is UserListResult.LoadUserLisByNameResult.Error -> {
                 sender.onNext(UserListViewEffect.ShowResultErrorViewEffect)
-
             }
             is UserListResult.LoadMoreUserListResult.Empty -> {
                 sender.onNext(UserListViewEffect.ShowResultEmptyViewEffect)
-
             }
             is UserListResult.SetSortSettingResult.Empty -> {
                 sender.onNext(UserListViewEffect.ShowResultEmptyViewEffect)
-
             }
             is UserListResult.LoadUserLisByNameResult.Empty -> {
                 sender.onNext(UserListViewEffect.ShowResultEmptyViewEffect)
-
             }
         }
     }

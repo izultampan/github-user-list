@@ -213,7 +213,7 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
                     rootCoordinator,
                     getString(R.string.result_not_found),
                     R.id.snackbarHolder
-                )
+                ).show()
             }
         }
     }
@@ -229,10 +229,10 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     }
 
     private fun handleContent(state: UserListViewState) {
+        adapter.submitList(state.userList)
         if (state.userList.isNotEmpty()) {
             layoutNotFound.visibility = View.GONE
             userListRecyclerView.visibility = View.VISIBLE
-            adapter.submitList(state.userList)
             setScrollListener(state.nextPage)
         } else {
             layoutNotFound.visibility = View.VISIBLE

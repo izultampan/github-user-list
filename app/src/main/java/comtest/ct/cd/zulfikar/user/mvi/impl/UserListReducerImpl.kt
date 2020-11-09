@@ -43,7 +43,7 @@ class UserListReducerImpl @Inject constructor() : UserListReducer {
                         userList = result.list
                     )
                 is UserListResult.LoadUserLisByNameResult.Empty ->
-                    previous.copy(isLoading = false, error = null)
+                    previous.copy(isLoading = false, error = null, userList = emptyList())
             }
             is UserListResult.LoadMoreUserListResult -> when (result) {
                 is UserListResult.LoadMoreUserListResult.Success -> {
