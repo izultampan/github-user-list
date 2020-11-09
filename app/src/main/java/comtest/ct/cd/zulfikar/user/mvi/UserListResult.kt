@@ -9,18 +9,19 @@ sealed class UserListResult : MviResult {
     sealed class LoadMoreUserListResult : UserListResult() {
         data class Success(val currentPage: Int, val nextPage: Int, val list: List<Items>) :
             LoadMoreUserListResult()
-
+        object Empty: LoadMoreUserListResult()
         data class Error(val error: Exception) : LoadMoreUserListResult()
     }
     sealed class SetSortSettingResult : UserListResult() {
         object Loading : SetSortSettingResult()
         data class Success(val list: List<Items>) :
             SetSortSettingResult()
-
+        object Empty: SetSortSettingResult()
         data class Error(val error: Exception) : SetSortSettingResult()
     }
     sealed class LoadUserLisByNameResult : UserListResult() {
         object Loading : LoadUserLisByNameResult()
+        object Empty: LoadUserLisByNameResult()
         data class Success(val isPullToRefresh: Boolean, val list: List<Items>) :
             LoadUserLisByNameResult()
 

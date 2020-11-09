@@ -9,10 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.quipper.common.mvi.MviView
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import com.uber.autodispose.autoDisposable
 import comtest.ct.cd.zulfikar.R
+import comtest.ct.cd.zulfikar.ext.createSnackBar
+import comtest.ct.cd.zulfikar.ext.createSnackBarNoAction
 import comtest.ct.cd.zulfikar.user.UserListOrderBy
 import comtest.ct.cd.zulfikar.user.mvi.UserListIntent
 import comtest.ct.cd.zulfikar.user.mvi.UserListViewEffect
@@ -104,6 +107,7 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
             )
         }
     }
+
     private fun setScrollListener(page: Int) {
         //add scroll listener
         userListRecyclerView.clearOnScrollListeners()
@@ -186,7 +190,32 @@ class UserListFragment : Fragment(), MviView<UserListIntent, UserListViewState> 
     }
 
     private fun handleViewEffect(userListViewEffect: UserListViewEffect) {
-
+        when (userListViewEffect) {
+            is UserListViewEffect.ShowResultErrorViewEffect -> {
+                createSnackBar(
+                    rootCoordinator,
+                    R.string.error_something_wrong,
+                    R.string.action_retry,
+                    {
+                        intentSubject.onNext(
+                            UserListIntent.LoadUserListByNameIntent(
+                                false,
+                                txtSearch.query.toString()
+                            )
+                        )
+                    },
+                    R.id.snackbarHolder,
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+            is UserListViewEffect.ShowResultEmptyViewEffect -> {
+                createSnackBarNoAction(
+                    rootCoordinator,
+                    getString(R.string.result_not_found),
+                    R.id.snackbarHolder
+                )
+            }
+        }
     }
 
     private fun handleLoading(state: UserListViewState) {

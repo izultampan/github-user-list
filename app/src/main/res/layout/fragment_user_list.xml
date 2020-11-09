@@ -7,17 +7,39 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/space_16dp">
 
+    <LinearLayout
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnSort"
+        android:layout_marginEnd="@dimen/space_16dp"
+        android:layout_marginStart="@dimen/space_16dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/github_user"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/space_8dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ctcd" />
+    </LinearLayout>
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/txtSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/space_16dp"
+        android:layout_marginTop="@dimen/space_8dp"
+        android:layout_marginStart="@dimen/space_8dp"
         android:layout_marginEnd="@dimen/space_16dp"
-        android:hint="@string/type_name_here"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnSort"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:queryHint="@string/type_name_here"
         android:gravity="center_vertical"/>
 
     <ImageView
@@ -27,8 +49,8 @@
         android:layout_marginEnd="@dimen/space_16dp"
         android:src="@android:drawable/ic_menu_sort_alphabetically"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/txtSearch"/>
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@id/title"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
